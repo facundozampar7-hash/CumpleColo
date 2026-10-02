@@ -4,49 +4,68 @@
 <title>Feliz cumple 🎉</title>
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--p1:#fff0f6;--p2:#ffd6e7;--p3:#ffb3d1;--p4:#ff80b5;--p5:#e91e8c;--p6:#9c1a5c;--ink:#5a1238;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--p1:#f2f7f4;--p2:#d8e8e1;--p3:#b5d4c7;--p4:#83b8a2;--p5:#4c8c73;--p6:#23523f;--ink:#1a3b2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:linear-gradient(180deg,var(--p1),var(--p2) 60%,var(--p1));background-color:var(--p1);color:var(--ink);font-family:'Quicksand',system-ui,sans-serif;overflow-x:hidden}
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-.hero img{width:min(94vw,1000px);filter:drop-shadow(0 10px 18px rgba(156,26,92,.25))}
+.hero img{width:min(94vw,1000px);filter:drop-shadow(0 10px 18px rgba(35,82,63,.2))}
 .hint{margin-top:22px;color:var(--p5);font-weight:700;animation:b 1.6s infinite}
 @keyframes b{50%{transform:translateY(8px)}}
 .intro{padding:70px 20px 30px;text-align:center}
 .intro h2{font-family:'Pacifico',cursive;font-weight:400;font-size:clamp(2rem,6vw,3.6rem);color:var(--p5);margin:0}
 .intro p{margin:10px 0 0;color:var(--p6)}
 .year{max-width:1100px;margin:0 auto;padding:40px 18px 10px}
-.year h3{display:inline-block;margin:0 0 16px;font-size:2rem;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--p4),var(--p5));padding:4px 22px;border-radius:99px;box-shadow:0 6px 16px rgba(233,30,140,.3)}
+.year h3{display:inline-block;margin:0 0 16px;font-size:2rem;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--p4),var(--p5));padding:4px 22px;border-radius:99px;box-shadow:0 6px 16px rgba(76,140,115,.3)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.ph{aspect-ratio:1;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center;color:var(--p6);font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(156,26,92,.15);transition:transform .25s;position:relative}
+.ph{aspect-ratio:1;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center;color:var(--p6);font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(35,82,63,.15);transition:transform .25s;position:relative}
 .ph:hover{transform:scale(1.03) rotate(-1deg)}
 .ph img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .rv{opacity:0;transform:translateY(30px);transition:all .7s}.rv.in{opacity:1;transform:none}
+
+/* Estilo para la sección de la carta */
+.carta-section{max-width:900px;margin:60px auto;padding:0 20px;text-align:center}
+.carta-section h2{font-family:'Pacifico',cursive;font-weight:400;font-size:clamp(2rem,5vw,3rem);color:var(--p5);margin:0 0 20px}
+.carta-container{background:#fff;padding:16px;border-radius:24px;box-shadow:0 10px 30px rgba(35,82,63,.15);cursor:pointer;transition:transform .3s}
+.carta-container:hover{transform:scale(1.01)}
+.carta-container img{width:100%;height:auto;border-radius:16px;display:block}
+
 .vids{background:linear-gradient(180deg,var(--p3),var(--p4));margin-top:60px;padding:50px 18px 70px}
 .vids h2{font-family:'Pacifico',cursive;font-weight:400;color:#fff;text-align:center;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 24px}
 .vg{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
 .v{aspect-ratio:16/9;border-radius:18px;background:var(--p1);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--p6);font-weight:600}
 .v video{width:100%;height:100%;background:#000}
 footer{text-align:center;padding:30px;color:var(--p6);font-weight:600}
-#lb{position:fixed;inset:0;background:rgba(90,18,56,.9);display:none;align-items:center;justify-content:center;z-index:9;padding:20px}
+#lb{position:fixed;inset:0;background:rgba(26,59,46,.9);display:none;align-items:center;justify-content:center;z-index:9;padding:20px}
 #lb.on{display:flex}#lb img{max-width:100%;max-height:100%;border-radius:12px}
 
-#mb{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:20;width:48px;height:48px;border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,var(--p4),var(--p5));color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 16px rgba(233,30,140,.4);display:flex;align-items:center;justify-content:center}
+#mb{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:20;width:48px;height:48px;border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,var(--p4),var(--p5));color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 16px rgba(76,140,115,.4);display:flex;align-items:center;justify-content:center}
 #mb.on{animation:sp 3s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 #yt{position:fixed;width:2px;height:2px;left:-10px;bottom:0;opacity:0;pointer-events:none}
 #gate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px;background:linear-gradient(160deg,var(--p2),var(--p3) 55%,var(--p4));transition:opacity .6s}
 #gate.off{opacity:0;pointer-events:none}
-#gate h1{font-family:'Pacifico',cursive;font-weight:400;color:#fff;font-size:clamp(2rem,8vw,3.6rem);margin:0;text-shadow:0 4px 14px rgba(156,26,92,.35)}
-#gate button{font:700 1.2rem 'Quicksand',sans-serif;color:var(--p5);background:#fff;border:0;border-radius:99px;padding:14px 38px;cursor:pointer;box-shadow:0 8px 22px rgba(156,26,92,.35);animation:pu 1.4s infinite}
+#gate h1{font-family:'Pacifico',cursive;font-weight:400;color:#fff;font-size:clamp(2rem,8vw,3.6rem);margin:0;text-shadow:0 4px 14px rgba(35,82,63,.35)}
+#gate button{font:700 1.2rem 'Quicksand',sans-serif;color:var(--p5);background:#fff;border:0;border-radius:99px;padding:14px 38px;cursor:pointer;box-shadow:0 8px 22px rgba(35,82,63,.35);animation:pu 1.4s infinite}
 @keyframes pu{50%{transform:scale(1.07)}}
 </style></head><body>
 <div id="gate"><h1>Para: Pris ♥️</h1><button id="go">Abrir 💌</button></div>
 <section class="hero"><img src="img/hero.png" alt="Feliz cumple"><div class="hint">↓ Deslizá ↓</div></section>
 <section class="intro rv"><h2>Toda una vida compartiendo juntas</h2><p>Un recorrido por nuestros años 💕</p></section>
+
 <main id="m"></main>
-<section class="vids"><h2>Por más años donde la vida suene llena de nuestras risas</h2><div class="vg" id="vg"></div></section>
+
+<!-- SECCIÓN DE LA CARTA EN GRANDE -->
+<section class="carta-section rv">
+  <h2>Una cartita para vos 💌</h2>
+  <div class="carta-container" id="carta-btn">
+    <img src="img/carta.jpeg" alt="Carta de cumpleaños" id="carta-img" onerror="this.src='img/carta.png'">
+  </div>
+</section>
+
+<section class="vids rv"><h2>Por más años donde la vida suene llena de nuestras risas</h2><div class="vg" id="vg"></div></section>
 <footer>Con todo el cariño, Jo.♥️</footer>
 <div id="lb"></div>
 <button id="mb" aria-label="Pausar o reproducir música" title="Música">🎵</button><div id="yt"></div>
+
 <script>
 // Cantidad de fotos por año
 const Y={2013:4,2014:4,2016:5,2017:8,2018:4,2019:8,2020:2,2021:2,2022:3,2023:2,2024:6,2025:4,2026:8};
@@ -59,13 +78,11 @@ for(const [y,n] of Object.entries(Y)){
   for(let i=1;i<=n;i++){
     const d=document.createElement('div');d.className='ph';
     
-    // Crear la etiqueta de imagen directamente
     const im=document.createElement('img');
     im.loading='lazy';
     im.alt='Foto '+y+' - '+i;
     im.src='img/'+y+'-'+i+'.jpeg';
     
-    // Respaldo por si alguna fuera .jpg en lugar de .jpeg
     im.onerror=function(){
       if(!this.dataset.tried){
         this.dataset.tried = "true";
@@ -73,7 +90,6 @@ for(const [y,n] of Object.entries(Y)){
       }
     };
 
-    // Funcionalidad para abrir la imagen en grande (Lightbox) al hacer clic
     d.onclick=()=>{
       lb.innerHTML='';
       const b=new Image();
@@ -87,6 +103,15 @@ for(const [y,n] of Object.entries(Y)){
   }
   m.appendChild(s);
 }
+
+// Funcionalidad para abrir la carta en grande al hacerle clic
+document.getElementById('carta-btn').onclick=()=>{
+  lb.innerHTML='';
+  const b=new Image();
+  b.src=document.getElementById('carta-img').src;
+  lb.appendChild(b);
+  lb.classList.add('on');
+};
 
 lb.onclick=()=>lb.classList.remove('on');
 
