@@ -59,7 +59,7 @@ for(const [y,n] of Object.entries(Y)){
     const d=document.createElement('div');d.className='ph';d.textContent='📷 '+y+' · '+i;
     const im=new Image();im.loading='lazy';im.alt='Foto '+y;
     im.onload=()=>{d.textContent='';d.appendChild(im);d.onclick=()=>{lb.innerHTML='';const b=new Image();b.src=im.src;lb.appendChild(b);lb.classList.add('on')}};
-    const base='img/'+y+'-'+i;im.onerror=()=>{if(!im.dataset.r){im.dataset.r=1;im.src=base+'.jpg'}};im.src=base+'.jpeg';
+    const base='img/'+y+'-'+i;im.onerror=()=>{if(!im.dataset.r){im.dataset.r=1;im.src=base+'.jpeg'}};im.src=base+'.jpeg';
     g.appendChild(d);
   }
   m.appendChild(s);
