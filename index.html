@@ -33,8 +33,14 @@ footer{text-align:center;padding:30px;color:var(--p6);font-weight:600}
 #mb{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:20;width:48px;height:48px;border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,var(--p4),var(--p5));color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 16px rgba(233,30,140,.4);display:flex;align-items:center;justify-content:center}
 #mb.on{animation:sp 3s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 #yt{position:fixed;width:2px;height:2px;left:-10px;bottom:0;opacity:0;pointer-events:none}
+#gate{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px;background:linear-gradient(160deg,var(--p2),var(--p3) 55%,var(--p4));transition:opacity .6s}
+#gate.off{opacity:0;pointer-events:none}
+#gate h1{font-family:'Pacifico',cursive;font-weight:400;color:#fff;font-size:clamp(2rem,8vw,3.6rem);margin:0;text-shadow:0 4px 14px rgba(156,26,92,.35)}
+#gate button{font:700 1.2rem 'Quicksand',sans-serif;color:var(--p5);background:#fff;border:0;border-radius:99px;padding:14px 38px;cursor:pointer;box-shadow:0 8px 22px rgba(156,26,92,.35);animation:pu 1.4s infinite}
+@keyframes pu{50%{transform:scale(1.07)}}
 </style></head><body>
-<section class="hero"><img src="img/hero.png" alt="Feliz cumple"><div class="hint">↓ Deslizá ↓</div></section>
+<div id="gate"><h1>Tenemos una sorpresa 🎁</h1><button id="go">Abrir 💌</button></div>
+<section class="hero"><img src="hero.png" alt="Feliz cumple"><div class="hint">↓ Deslizá ↓</div></section>
 <section class="intro rv"><h2>Toda una vida compartiendo juntas</h2><p>Un recorrido por nuestros años 💕</p></section>
 <main id="m"></main>
 <section class="vids"><h2>Videos para recordar 🎬</h2><div class="vg" id="vg"></div></section>
@@ -72,7 +78,7 @@ document.querySelectorAll('.rv').forEach(e=>io.observe(e));
 // MÚSICA: usa musica.mp3 si existe; si no, el video de YouTube (funciona al alojar la página en tu propio sitio)
 const YT_ID='ktOR7tQejtY',mb=document.getElementById('mb');
 let mode='audio',playing=false,ytp=null,ytReady=false,want=false;
-const au=new Audio('musica.mp3');au.loop=true;au.volume=.6;
+const au=new Audio('musica.mp3');au.loop=true;au.preload='auto';au.volume=.6;
 function setUI(){mb.classList.toggle('on',playing);mb.textContent=playing?'🎵':'🔇'}
 function loadYT(){
   if(mode==='yt')return;mode='yt';
@@ -87,6 +93,11 @@ function play(){want=true;if(mode==='audio')au.play().then(()=>{playing=true;set
 function pause(){want=false;if(mode==='audio'){au.pause();playing=false;setUI()}else if(ytReady)ytp.pauseVideo()}
 mb.onclick=e=>{e.stopPropagation();started=true;playing?pause():play()};
 let started=false;
-['pointerdown','touchstart','keydown','scroll'].forEach(ev=>addEventListener(ev,()=>{if(!started){started=true;play()}},{once:false,passive:true}));
 setUI();
+// Pantalla de entrada: el toque en "Abrir" habilita el sonido en todos los navegadores
+const gate=document.getElementById('gate');
+function openGate(){started=true;gate.classList.add('off');setTimeout(()=>gate.style.display='none',700)}
+document.getElementById('go').onclick=()=>{openGate();play()};
+// Si el navegador permite autoplay con sonido, arranca sola y la pantalla se cierra
+au.play().then(()=>{playing=true;want=true;setUI();openGate()}).catch(()=>{});
 </script></body></html>
