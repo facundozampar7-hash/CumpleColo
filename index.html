@@ -78,7 +78,7 @@ document.querySelectorAll('.rv').forEach(e=>io.observe(e));
 // MÚSICA: usa musica.mp3 si existe; si no, el video de YouTube (funciona al alojar la página en tu propio sitio)
 const YT_ID='ktOR7tQejtY',mb=document.getElementById('mb');
 let mode='audio',playing=false,ytp=null,ytReady=false,want=false;
-const au=new Audio('musica.mp3');au.loop=true;au.preload='auto';au.volume=.6;
+const au=new Audio('img/musica.mp3');au.loop=true;au.preload='auto';au.volume=.6;
 function setUI(){mb.classList.toggle('on',playing);mb.textContent=playing?'🎵':'🔇'}
 function loadYT(){
   if(mode==='yt')return;mode='yt';
