@@ -17,9 +17,9 @@ body{margin:0;background:linear-gradient(180deg,var(--p1),var(--p2) 60%,var(--p1
 .year{max-width:1100px;margin:0 auto;padding:40px 18px 10px}
 .year h3{display:inline-block;margin:0 0 16px;font-size:2rem;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--p4),var(--p5));padding:4px 22px;border-radius:99px;box-shadow:0 6px 16px rgba(233,30,140,.3)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.ph{aspect-ratio:1;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center;color:var(--p6);font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(156,26,92,.15);transition:transform .25s}
+.ph{aspect-ratio:1;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,var(--p2),var(--p3));display:flex;align-items:center;justify-content:center;color:var(--p6);font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(156,26,92,.15);transition:transform .25s;position:relative}
 .ph:hover{transform:scale(1.03) rotate(-1deg)}
-.ph img{width:100%;height:100%;object-fit:cover}
+.ph img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .rv{opacity:0;transform:translateY(30px);transition:all .7s}.rv.in{opacity:1;transform:none}
 .vids{background:linear-gradient(180deg,var(--p3),var(--p4));margin-top:60px;padding:50px 18px 70px}
 .vids h2{font-family:'Pacifico',cursive;font-weight:400;color:#fff;text-align:center;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 24px}
@@ -48,23 +48,48 @@ footer{text-align:center;padding:30px;color:var(--p6);font-weight:600}
 <div id="lb"></div>
 <button id="mb" aria-label="Pausar o reproducir música" title="Música">🎵</button><div id="yt"></div>
 <script>
-// Cantidad de fotos por año. Fotos: img/2013-1.jpeg ... | Videos: img/videos-1.mp4 ... img/videos-5.mp4
+// Cantidad de fotos por año
 const Y={2013:4,2014:4,2016:5,2017:8,2018:4,2019:8,2020:2,2021:2,2022:3,2023:2,2024:6,2025:4,2026:8};
 const m=document.getElementById('m'),lb=document.getElementById('lb');
+
 for(const [y,n] of Object.entries(Y)){
   const s=document.createElement('section');s.className='year rv';
   s.innerHTML='<h3>'+y+'</h3><div class="grid"></div>';
   const g=s.querySelector('.grid');
   for(let i=1;i<=n;i++){
-    const d=document.createElement('div');d.className='ph';d.textContent='📷 '+y+' · '+i;
-    const im=new Image();im.loading='lazy';im.alt='Foto '+y;
-    im.onload=()=>{d.textContent='';d.appendChild(im);d.onclick=()=>{lb.innerHTML='';const b=new Image();b.src=im.src;lb.appendChild(b);lb.classList.add('on')}};
-    const base='img/'+y+'-'+i;im.onerror=()=>{if(!im.dataset.r){im.dataset.r=1;im.src=base+'.jpeg'}};im.src=base+'.jpeg';
+    const d=document.createElement('div');d.className='ph';
+    
+    // Crear la etiqueta de imagen directamente
+    const im=document.createElement('img');
+    im.loading='lazy';
+    im.alt='Foto '+y+' - '+i;
+    im.src='img/'+y+'-'+i+'.jpeg';
+    
+    // Respaldo por si alguna fuera .jpg en lugar de .jpeg
+    im.onerror=function(){
+      if(!this.dataset.tried){
+        this.dataset.tried = "true";
+        this.src='img/'+y+'-'+i+'.jpg';
+      }
+    };
+
+    // Funcionalidad para abrir la imagen en grande (Lightbox) al hacer clic
+    d.onclick=()=>{
+      lb.innerHTML='';
+      const b=new Image();
+      b.src=im.src;
+      lb.appendChild(b);
+      lb.classList.add('on');
+    };
+
+    d.appendChild(im);
     g.appendChild(d);
   }
   m.appendChild(s);
 }
+
 lb.onclick=()=>lb.classList.remove('on');
+
 const vg=document.getElementById('vg');
 for(let i=1;i<=5;i++){
   const d=document.createElement('div');d.className='v';d.textContent='🎬 Video '+i;
@@ -72,10 +97,11 @@ for(let i=1;i<=5;i++){
   v.onloadedmetadata=()=>{d.textContent='';d.appendChild(v)};
   v.src='img/videos-'+i+'.mp4';vg.appendChild(d);
 }
+
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.1});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));
 
-// MÚSICA: usa musica.mp3 si existe; si no, el video de YouTube (funciona al alojar la página en tu propio sitio)
+// MÚSICA
 const YT_ID='ktOR7tQejtY',mb=document.getElementById('mb');
 let mode='audio',playing=false,ytp=null,ytReady=false,want=false;
 const au=new Audio('img/musica.mp3');au.loop=true;au.preload='auto';au.volume=.6;
@@ -94,10 +120,9 @@ function pause(){want=false;if(mode==='audio'){au.pause();playing=false;setUI()}
 mb.onclick=e=>{e.stopPropagation();started=true;playing?pause():play()};
 let started=false;
 setUI();
-// Pantalla de entrada: el toque en "Abrir" habilita el sonido en todos los navegadores
+
 const gate=document.getElementById('gate');
 function openGate(){started=true;gate.classList.add('off');setTimeout(()=>gate.style.display='none',700)}
 document.getElementById('go').onclick=()=>{openGate();play()};
-// Si el navegador permite autoplay con sonido, arranca sola y la pantalla se cierra
 au.play().then(()=>{playing=true;want=true;setUI();openGate()}).catch(()=>{});
 </script></body></html>
