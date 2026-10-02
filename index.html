@@ -56,11 +56,35 @@ for(const [y,n] of Object.entries(Y)){
   s.innerHTML='<h3>'+y+'</h3><div class="grid"></div>';
   const g=s.querySelector('.grid');
   for(let i=1;i<=n;i++){
-    const d=document.createElement('div');d.className='ph';d.textContent='📷 '+y+' · '+i;
-    const im=new Image();im.loading='lazy';im.alt='Foto '+y;
-    im.onload=()=>{d.textContent='';d.appendChild(im);d.onclick=()=>{lb.innerHTML='';const b=new Image();b.src=im.src;lb.appendChild(b);lb.classList.add('on')}};
-    const base='img/'+y+'-'+i;im.onerror=()=>{if(!im.dataset.r){im.dataset.r=1;im.src=base+'.jpg'}};im.src=base+'.jpeg';
+    const d=document.createElement('div');
+    d.className='ph';
+    d.textContent='📷 '+y+' · '+i;
+
+    const im=document.createElement('img');
+    im.loading='lazy';
+    im.alt='Foto '+y+'-'+i;
+    im.src='./img/'+y+'-'+i+'.jpeg';
+
+    im.onload=()=>{
+        d.textContent='';
+        d.appendChild(im);
+
+        d.onclick=()=>{
+            lb.innerHTML='';
+            const b=document.createElement('img');
+            b.src=im.src;
+            lb.appendChild(b);
+            lb.classList.add('on');
+        };
+    };
+
+    im.onerror=()=>{
+        console.error('No se pudo cargar:', im.src);
+        d.textContent='❌ No se encontró '+y+'-'+i+'.jpeg';
+    };
+
     g.appendChild(d);
+}
   }
   m.appendChild(s);
 }
