@@ -48,7 +48,7 @@ footer{text-align:center;padding:30px;color:var(--p6);font-weight:600}
 <div id="lb"></div>
 <button id="mb" aria-label="Pausar o reproducir música" title="Música">🎵</button><div id="yt"></div>
 <script>
-// Cantidad de fotos por año. Fotos: fotos/2013-1.jpg, 2013-2.jpg ... | Videos: videos/1.mp4 ... videos/5.mp4
+// Cantidad de fotos por año. Fotos: img/2013-1.jpeg ... | Videos: img/videos-1.mp4 ... img/videos-5.mp4
 const Y={2013:4,2014:4,2016:5,2017:8,2018:4,2019:8,2020:2,2021:2,2022:3,2023:2,2024:6,2025:4,2026:8};
 const m=document.getElementById('m'),lb=document.getElementById('lb');
 for(const [y,n] of Object.entries(Y)){
@@ -59,7 +59,7 @@ for(const [y,n] of Object.entries(Y)){
     const d=document.createElement('div');d.className='ph';d.textContent='📷 '+y+' · '+i;
     const im=new Image();im.loading='lazy';im.alt='Foto '+y;
     im.onload=()=>{d.textContent='';d.appendChild(im);d.onclick=()=>{lb.innerHTML='';const b=new Image();b.src=im.src;lb.appendChild(b);lb.classList.add('on')}};
-    im.src='fotos/'+y+'-'+i+'.jpg';
+    const base='img/'+y+'-'+i;im.onerror=()=>{if(!im.dataset.r){im.dataset.r=1;im.src=base+'.jpg'}};im.src=base+'.jpeg';
     g.appendChild(d);
   }
   m.appendChild(s);
@@ -70,7 +70,7 @@ for(let i=1;i<=5;i++){
   const d=document.createElement('div');d.className='v';d.textContent='🎬 Video '+i;
   const v=document.createElement('video');v.controls=true;v.preload='metadata';v.playsInline=true;
   v.onloadedmetadata=()=>{d.textContent='';d.appendChild(v)};
-  v.src='videos/'+i+'.mp4';vg.appendChild(d);
+  v.src='img/videos-'+i+'.mp4';vg.appendChild(d);
 }
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.1});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));
