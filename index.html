@@ -22,12 +22,29 @@ body{margin:0;background:linear-gradient(180deg,var(--p1),var(--p2) 60%,var(--p1
 .ph img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .rv{opacity:0;transform:translateY(30px);transition:all .7s}.rv.in{opacity:1;transform:none}
 
-/* Estilo para la sección de la carta */
+/* Sección de la carta */
 .carta-section{max-width:900px;margin:60px auto;padding:0 20px;text-align:center}
 .carta-section h2{font-family:'Pacifico',cursive;font-weight:400;font-size:clamp(2rem,5vw,3rem);color:var(--p5);margin:0 0 20px}
-.carta-container{background:#fff;padding:16px;border-radius:24px;box-shadow:0 10px 30px rgba(35,82,63,.15);cursor:pointer;transition:transform .3s}
-.carta-container:hover{transform:scale(1.01)}
-.carta-container img{width:100%;height:auto;border-radius:16px;display:block}
+.carta-container{position:relative;background:#fff;padding:16px;border-radius:24px;box-shadow:0 10px 30px rgba(35,82,63,.15);transition:transform .3s;overflow:hidden}
+.carta-container.open{cursor:pointer}
+.carta-container.open:hover{transform:scale(1.01)}
+.carta-container img{width:100%;height:auto;border-radius:16px;display:block;transition:filter .9s ease,transform .9s ease;user-select:none;-webkit-user-drag:none}
+.carta-container.locked img{filter:blur(28px) brightness(.9);transform:scale(1.06);pointer-events:none}
+
+/* Candado + adivinanza */
+.lock{position:absolute;inset:16px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px;background:rgba(242,247,244,.55);backdrop-filter:blur(2px);transition:opacity .7s;overflow-y:auto}
+.carta-container.open .lock{opacity:0;pointer-events:none}
+.lock .ico{font-size:2rem;line-height:1}
+.lock .rid{margin:0;font-weight:700;color:var(--p6);font-size:clamp(.92rem,2.6vw,1.15rem);line-height:1.45;max-width:520px}
+.dt{display:flex;align-items:center;gap:6px;font-weight:700;font-size:1.6rem;color:var(--p5)}
+.dt input{width:2.6em;padding:8px 0;text-align:center;font:700 1.3rem 'Quicksand',sans-serif;color:var(--p6);background:#fff;border:2px solid var(--p3);border-radius:12px;outline:none;transition:border-color .2s,box-shadow .2s}
+.dt input:focus{border-color:var(--p5);box-shadow:0 0 0 4px rgba(131,184,162,.35)}
+.dt input::placeholder{color:var(--p3);letter-spacing:2px}
+.dt.err{animation:sh .45s}
+.dt.err input{border-color:#d9667a}
+@keyframes sh{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+#unlock{font:700 1rem 'Quicksand',sans-serif;color:#fff;background:linear-gradient(90deg,var(--p4),var(--p5));border:0;border-radius:99px;padding:10px 28px;cursor:pointer;box-shadow:0 6px 16px rgba(76,140,115,.35)}
+#msg{min-height:1.2em;margin:0;font-size:.9rem;font-weight:700;color:#b23a54}
 
 .vids{background:linear-gradient(180deg,var(--p3),var(--p4));margin-top:60px;padding:50px 18px 70px}
 .vids h2{font-family:'Pacifico',cursive;font-weight:400;color:#fff;text-align:center;font-size:clamp(1.8rem,5vw,3rem);margin:0 0 24px}
@@ -53,11 +70,24 @@ footer{text-align:center;padding:30px;color:var(--p6);font-weight:600}
 
 <main id="m"></main>
 
-<!-- SECCIÓN DE LA CARTA EN GRANDE -->
+<!-- SECCIÓN DE LA CARTA (bloqueada con adivinanza) -->
 <section class="carta-section rv">
   <h2>Una cartita para vos 💌</h2>
-  <div class="carta-container" id="carta-btn">
+  <div class="carta-container locked" id="carta-btn">
     <img src="img/carta.jpeg" alt="Carta de cumpleaños" id="carta-img" onerror="this.src='img/carta.png'">
+    <div class="lock" id="lock">
+      <div class="ico">🔒</div>
+      <p class="rid">Diez más diez se juntan para festejar,<br>y dos décadas enteras hoy vas a celebrar.<br>Si sumas los años que el tiempo te dio,<br>dime, ¿a qué fecha exacta llego?</p>
+      <div class="dt" id="dt">
+        <input id="d1" inputmode="numeric" maxlength="2" placeholder="__" aria-label="Día" autocomplete="off">
+        <span>/</span>
+        <input id="d2" inputmode="numeric" maxlength="2" placeholder="__" aria-label="Mes" autocomplete="off">
+        <span>/</span>
+        <input id="d3" inputmode="numeric" maxlength="2" placeholder="__" aria-label="Año (2 cifras)" autocomplete="off">
+      </div>
+      <button id="unlock">Descubrir 💌</button>
+      <p id="msg"></p>
+    </div>
   </div>
 </section>
 
@@ -104,8 +134,40 @@ for(const [y,n] of Object.entries(Y)){
   m.appendChild(s);
 }
 
-// Funcionalidad para abrir la carta en grande al hacerle clic
-document.getElementById('carta-btn').onclick=()=>{
+// ---- CARTA: adivinanza + fecha ----
+const box=document.getElementById('carta-btn'),
+      ins=[document.getElementById('d1'),document.getElementById('d2'),document.getElementById('d3')],
+      dt=document.getElementById('dt'),msg=document.getElementById('msg'),
+      ANSWER=['28','10','26'];
+
+ins.forEach((el,i)=>{
+  el.addEventListener('input',()=>{
+    el.value=el.value.replace(/\D/g,'');
+    msg.textContent='';
+    if(el.value.length===2&&i<2)ins[i+1].focus();
+  });
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Backspace'&&!el.value&&i>0)ins[i-1].focus();
+    if(e.key==='Enter')check();
+  });
+});
+
+function check(){
+  const ok=ins.every((el,i)=>el.value.padStart(2,'0')===ANSWER[i]);
+  if(ok){
+    box.classList.remove('locked');
+    box.classList.add('open');
+    ins.forEach(el=>el.blur());
+  }else{
+    msg.textContent='Mmm, esa no es la fecha... ¡probá de nuevo! 🤔';
+    dt.classList.remove('err');void dt.offsetWidth;dt.classList.add('err');
+  }
+}
+document.getElementById('unlock').onclick=check;
+
+// Abrir la carta en grande (solo cuando ya está desbloqueada)
+box.onclick=e=>{
+  if(!box.classList.contains('open'))return;
   lb.innerHTML='';
   const b=new Image();
   b.src=document.getElementById('carta-img').src;
